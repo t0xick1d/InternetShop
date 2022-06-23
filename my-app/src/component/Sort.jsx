@@ -1,6 +1,17 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 const Sort = () =>{
+
+  const [openSort, setOpenSort] = useState(false)
+  const [actualSelect, setActualSelect] = useState(0)
+  const select = ['популярности', 'цене', 'алфавиту']
+  let actualSelectName = select[actualSelect]
+
+  const closeAndSetSelected = (value) =>{
+    setActualSelect(value);
+    setOpenSort(false)
+  }
+
   return(
     <div className="sort">
       <div className="sort__label">
@@ -17,15 +28,16 @@ const Sort = () =>{
           />
         </svg>
         <b>Сортировка по:</b>
-        <span>популярности</span>
+        <span onClick = {() =>{setOpenSort(!openSort)}}>{actualSelectName}</span>
       </div>
-      <div className="sort__popup">
+      {openSort && <div className="sort__popup">
         <ul>
-          <li className="active">популярности</li>
-          <li>цене</li>
-          <li>алфавиту</li>
+          {select.map((v,i) => {
+            return(<li key={i} onClick={()=>{closeAndSetSelected(i)}}className={i===actualSelect?"active" : '' }>{v}</li>)
+          })}
         </ul>
-      </div>
+      </div>}
+      
     </div>
   )
 }

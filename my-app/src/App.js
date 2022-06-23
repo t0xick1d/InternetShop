@@ -7,6 +7,8 @@ import Sort from './component/Sort'
 import './scss/app.scss';
 import Pizzablock from './component/PizzaBlock';
 
+import pizzas from './pizza.json'
+
 function App() {
   return (
     <div className="wrapper">
@@ -21,10 +23,7 @@ function App() {
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
-            <Pizzablock/>
-            <Pizzablock/>
-            <Pizzablock/>
-           
+            {pizzas.map((obj, i) => <Pizzablock {...obj} key ={i}/> )}
           </div>
         </div>
       </div>
