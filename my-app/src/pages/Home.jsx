@@ -11,30 +11,31 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    
     fetch('https://62b4a836530b26da4cc3313b.mockapi.io/items')
-      .then(res =>{
-        return res.json()
-      }).then(json=>{
-        
-        setItems(json)
-        setIsLoading(false)
-        
+      .then((res) => {
+        return res.json();
       })
-  }, [])
+      .then((json) => {
+        setItems(json);
+        setIsLoading(false);
+        window.scrollTo(0, 0);
+      });
+  }, []);
 
   return (
-    <>
-    <div className="content__top">
-      <Categories/>
-      <Sort/>
+    <div className="container">
+      <div className="content__top">
+        <Categories />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-      {isLoading ? [...new Array(6)].map((v,i)=><Skeleton key={i}/>) : items.map((obj, i) => <Pizzablock {...obj} key ={i}/> )}
+        {isLoading
+          ? [...new Array(6)].map((v, i) => <Skeleton key={i} />)
+          : items.map((obj, i) => <Pizzablock {...obj} key={i} />)}
+      </div>
     </div>
-    </>
-  )
+  );
 }
 
 export default Home;
