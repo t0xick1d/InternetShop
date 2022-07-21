@@ -1,18 +1,23 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSort } from '../redux/slices/filteSliece';
 
-const Sort = ({ actualSelect, setActualSelect }) => {
+const select = [
+  { name: 'популярності(DESC)', sortProperty: 'rating' },
+  { name: 'популярності(ASC)', sortProperty: '-rating' },
+  { name: 'ціні(DESC)', sortProperty: 'price' },
+  { name: 'ціні(ASC)', sortProperty: '-price' },
+  { name: 'алфавіту(DESC)', sortProperty: 'title' },
+  { name: 'алфавіту(ASC)', sortProperty: '-title' },
+];
+
+const Sort = () => {
+  const dispatch = useDispatch();
+  const sort = useSelector((state) => state.filter.sort);
   const [openSort, setOpenSort] = useState(false);
-  const select = [
-    { name: 'популярності(DESC)', sortProperty: 'rating' },
-    { name: 'популярності(ASC)', sortProperty: '-rating' },
-    { name: 'ціні(DESC)', sortProperty: 'price' },
-    { name: 'ціні(ASC)', sortProperty: '-price' },
-    { name: 'алфавіту(DESC)', sortProperty: 'title' },
-    { name: 'алфавіту(ASC)', sortProperty: '-title' },
-  ];
 
-  const closeAndSetSelected = (value) => {
-    setActualSelect(value);
+  const closeAndSetSelected = (obj) => {
+    dispatch(setSort(obj));
     setOpenSort(false);
   };
 
@@ -35,7 +40,7 @@ const Sort = ({ actualSelect, setActualSelect }) => {
           onClick={() => {
             setOpenSort(!openSort);
           }}>
-          {actualSelect.name}
+          {sort.name}
         </span>
       </div>
       {openSort && (
@@ -48,7 +53,7 @@ const Sort = ({ actualSelect, setActualSelect }) => {
                   onClick={() => {
                     closeAndSetSelected(obj);
                   }}
-                  className={actualSelect.sortProperty === obj.sortProperty ? 'active' : ''}>
+                  className={sort.sortProperty === obj.sortProperty ? 'active' : ''}>
                   {obj.name}
                 </li>
               );

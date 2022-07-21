@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { SearchContext } from '../App';
+
+import { setCategoryId } from '../redux/slices/filteSliece';
 
 import Categories from '../component/Categories';
 import Sort from '../component/Sort';
@@ -9,20 +12,23 @@ import Skeleton from '../component/PizzaBlock/SkeletonPizza';
 import Pagination from '../component/Pagination';
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { categoryId, sort } = useSelector((state) => state.filter);
+
   const { serchValue } = useContext(SearchContext);
+
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeIndexCategories, setActiveIndexCategories] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [actualSelect, setActualSelect] = useState({
-    name: 'пополярність(DESC)',
-    sortProperty: 'raiting',
-  });
+
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
 
   useEffect(() => {
-    const order = actualSelect.sortProperty.includes('-') ? 'asc' : 'desc';
-    const sortBy = actualSelect.sortProperty.replace('-', '');
-    const categori = activeIndexCategories > 0 ? `category=${activeIndexCategories}` : '';
+    const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sort.sortProperty.replace('-', '');
+    const categori = categoryId > 0 ? `category=${categoryId}` : '';
     const search = serchValue ? `&search=${serchValue}` : '';
     fetch(
       `https://62b4a836530b26da4cc3313b.mockapi.io/items?page=${currentPage}&limit=4&${categori}&sortBy=${sortBy}&order=${order}${search}`,
@@ -35,7 +41,7 @@ const Home = () => {
         setIsLoading(false);
         window.scrollTo(0, 0);
       });
-  }, [activeIndexCategories, actualSelect, serchValue, currentPage]);
+  }, [categoryId, serchValue, currentPage, sort.sortProperty]);
 
   const pizzas = items.map((obj, i) => <Pizzablock {...obj} key={i} />);
   const skeletons = [...new Array(6)].map((v, i) => <Skeleton key={i} />);
@@ -43,16 +49,8 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          activeIndex={activeIndexCategories}
-          setActiveIndex={(i) => setActiveIndexCategories(i)}
-        />
-        <Sort
-          actualSelect={actualSelect}
-          setActualSelect={(i) => {
-            setActualSelect(i);
-          }}
-        />
+        <Categories activeIndex={categoryId} setActiveIndex={(i) => onChangeCategory(i)} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>

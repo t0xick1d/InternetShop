@@ -22,7 +22,7 @@ function App() {
         <Header />
         <div className="content">
           <Routes>
-            <Route path="/" element={<Home serchValue={serchValue} />} />
+            <Route path="/" element={<Home />} />
             <Route path="/Cart" element={<Cart />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
